@@ -32,4 +32,13 @@ class Empleado extends Model
         // 'sede_fk' es la columna en empleados, 'codigo_unico_pk' es la PK en la tabla sedes
         return $this->belongsTo(Sede::class, 'sede_fk', 'codigo_unico_pk');
     }
+
+    // En app/Models/Empleado.php
+
+public function citas()
+{
+    // Asegúrate de que 'numero_legajo_fk' sea el nombre de la columna en tu tabla 'citas'
+    // y 'numero_legajo_pk' la columna en tu tabla 'empleados'
+    return $this->hasMany(Cita::class, 'numero_legajo_fk', 'numero_legajo_pk');
+}
 }

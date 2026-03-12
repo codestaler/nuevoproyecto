@@ -63,10 +63,17 @@ class EmpleadoController extends Controller
         return redirect()->route('empleados.index')->with('success', 'Empleado actualizado correctamente');
     }
 
-    public function destroy($id) 
-    {
-        $empleado = Empleado::findOrFail($id);
-        $empleado->delete();
-        return redirect()->route('empleados.index')->with('success', 'Empleado eliminado');
+public function destroy($id) 
+{
+    $empleado = Empleado::findOrFail($id);
+
+    // Verificamos si tiene citas antes de borrar
+    if ($empleado->citas()->count() > 0) {
+        return redirect()->route('empleados.index')
+            ->with('error', 'No puedes eliminar a este empleado porque tiene ' . $empleado->citas()->count() . ' citas asignadas.');
     }
+
+    $empleado->delete();
+    return redirect()->route('empleados.index')->with('success', 'Empleado eliminado correctamente');
+}
 }
