@@ -48,4 +48,25 @@ class PaisController extends Controller
         
         return redirect()->route('paises.index')->with('success', 'País actualizado correctamente');
     }
+
+public function destroy($id) 
+{
+    $pais = Pais::findOrFail($id);
+
+    // 1. Verificamos si tiene ciudades relacionadas
+    if ($pais->ciudades()->exists()) {
+        return redirect()->route('paises.index')
+            ->with('error', 'No puedes eliminar este país porque tiene ciudades asociadas.');
+    }
+
+    // 2. Verificamos si tiene pacientes relacionados
+    // Primero debemos definir la relación 'pacientes' en el modelo Pais
+    if ($pais->pacientes()->exists()) {
+        return redirect()->route('paises.index')
+            ->with('error', 'No puedes eliminar este país porque hay pacientes registrados en él.');
+    }
+
+    $pais->delete();
+    return redirect()->route('paises.index')->with('success', 'País eliminado correctamente.');
+}
 }
